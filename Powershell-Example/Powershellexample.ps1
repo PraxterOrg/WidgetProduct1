@@ -8,33 +8,20 @@
 
 ## Variables ##
 $myOrg = "PraxterOrg"
+$JsonDataObject =Get-Content -Path "C:\GIT\GITHUB\WidgetProduct1\Powershell-Example\Data\data.json" | ConvertFrom-Json
 
 Install-Module -Name PowerShellForGitHub
 
 # called the Set-GitHubAuthentication that had me put in the username password which then cached it. Enter the Token for the password and the whatever for the usnername.
-# keyvault would be a good ADD, maybe not MVP.
-#Set-GitHubAuthentication  
+# keyvault or GitHub Secrets (But Chickent/Egg) would be a good ADD, maybe not MVP.
 
-$secureString = ("GetFromKeyVault" | ConvertTo-SecureString -AsPlainText -Force)
+## I setup a env:variable for my GITHub token so I reference that here
+
+$secureString = ($ENV:GitHubToken | ConvertTo-SecureString -AsPlainText -Force)
 $cred = New-Object System.Management.Automation.PSCredential "username is ignored", $secureString
 Set-GitHubAuthentication -Credential $cred
 
-
-#Set-GitHubConfiguration -DefaultOwnerName PowerShell ## these are for the user of default
-#Set-GitHubConfiguration -DefaultRepositoryName PowerShellForGitHub ## this is the repro default 
-
 #$issues = Get-GitHubIssue -Uri 'https://github.com/praxterorg/base' ## get issues from a repro
-
-#New-GitHubRepository -RepositoryName $myExampleNewRepro -Organization $myOrg -DisallowRebaseMerge  ## looks like error if it exists (write code for error handling)
-#$repro = Get-GitHubRepository -OwnerName $myOrg -RepositoryName $myExampleNewRepro
-#$repro | remove-GitHubRepos
-## need to configure a template repro ## 
-
-##Set-GitHubRepositoryTeamPermission this should be used in the template to for base memeberships  
-##Get-GitHubRepositoryTeamPermission should be used for audit features
-
-## This will create a Team of developers if ieam -OrganizationName $t doesnt exists 
-## here is the my first block
 
 ## this line is to reset the team and delete it if needed. 
 <#
@@ -53,9 +40,10 @@ Function New-GitHubTeamFromArray {
         [Parameter()] [string] $privacy,
         [Parameter()] [string] $ParentTeamName
         )
-try {Get-GitHubTeam -OrganizationName $myOrg -TeamName $teamName}catch {New-GitHubTeam -OrganizationName $myOrg -TeamName $teamName}
-finally {Set-GitHubTeam -OrganizationName $myOrg -TeamName $teamName -description $teamDescription -privacy $privacy -ParentTeamName $parentTeamName}
+try {Get-GitHubTeam -OrganizationName $myOrg -TeamName $teamName}catch {New-GitHubTeam -OrganizationName $myOrg -TeamName $teamName -ParentTeamName $ParentTeamName}
+finally {Set-GitHubTeam -OrganizationName $myOrg -TeamName $teamName -description $teamDescription -privacy $privacy}     
 } 
+
 
 Function New-GitReproFromArray {  
     [CmdletBinding()] param (
@@ -101,17 +89,13 @@ Function Set-GitHubTeamPerms {
         Write-host "error " -ErrorAction stop   
       }
 }
-
-## Enable Dependabot Security ## 
-## Per Repro or Pre Org
 ## Trying to loop throug the json file
-
 ## setup the teams 
-$JsonDataObject =Get-Content -Path "C:\GIT\Experiment\data.json" | ConvertFrom-Json
+
 foreach ($Name in $JsonDataObject.Teams) 
 {
-    New-GitHubTeamFromArray -teamName ($Name.TeamName) -Description ($Name.Properties.Description) -privacy ($Name.Properties.Privacy) -ParentTeamName ($Name.Properties.ParentTeamNamearentTeamName)
-    Write-host "The teams name "+$Name.TeamName
+    New-GitHubTeamFromArray -teamName ($Name.TeamName) -Description ($Name.Properties.Description) -privacy ($Name.Properties.Privacy) -ParentTeamName ($Name.Properties.ParentTeamName)
+    Write-host ("The teams name "+$Name.TeamName+" The Description "+$Name.Properties.Description+" with privacy Model "+$name.Properties.Privacy+" and lastly parent team "+$name.properties.ParentTeamName)
     ## I need to add memebers for sure ##
 }     
 
@@ -125,30 +109,31 @@ foreach ($Repro in $JsonDataObject.Repro)
     foreach ($TeamName in $JsonDataObject.Teams) 
     {
         foreach ($TeamProperties in $TeamName.Properties.Permissions) {
-            Write-host ("The ReproName is "+$Repro.reproName+" with the teamname of "+$TeamName.TeamName+" and permissions to "+$TeamProperties)
-            Set-GitHubRepositoryTeamPermission -OwnerName $myOrg -RepositoryName ($Repro.reproName) -TeamName ($TeamName.TeamName) -Permission $TeamProperties    
+            Write-host ("The ReproName is "+$Repro.reproName+" with the teamname of "+$TeamName.TeamName+" and permissions to "+$TeamProperties )
+            Set-GitHubRepositoryTeamPermission -OwnerName $myOrg -RepositoryName ($Repro.reproName) -TeamName ($TeamName.TeamName) -Permission $TeamProperties
         }
     }
 
 }
 
 Write-Host "************************ Completed Work Making Objects **************************"
-$ReproResults = (Get-GitHubRepository -OwnerName praxterorg -RepositoryName WidgetProduct)
 
+#$ReproResults = (Get-GitHubRepository -OwnerName $myOrg -RepositoryName WidgetProduct)
 $ArgProtectionPolicys = @{cat = "sda"}
 
 #$ProtectionPolicy = ($Branch |new-GitHubRepositoryBranchPatternProtectionRule @ArgProtectionPolicys)
+
+## two example of of URI that levergage the API
+
 $URIOrg ="https://api.github.com/orgs/PraxterOrg)"
 $URIRepo = "https://api.github.com/repos/PraxterOrg/WidgetProduct1/branches"
 
 #$Request = (Invoke-webrequest -H  @{'Accept'= 'application/vnd.github.v3+json'} -uri $URIRepo)
 #$Request.Content |Write-Output |ConvertFrom-Json
 
-
-$Branch |Get-GitHubRepositoryBranchProtectionRule 
-$Branch |Remove-GitHubRepositoryBranchProtectionRule
-
-$branch |New-GitHubRepositoryBranchProtectionRule 
+#$ProtectionPolicy = (Get-GitHubRepositoryBranchProtectionRule -OwnerName $myOrg -BranchName main -RepositoryName WidgetProduct1)
+#$Branch |Remove-GitHubRepositoryBranchProtectionRule
+#$branch |New-GitHubRepositoryBranchProtectionRule 
 
 
 

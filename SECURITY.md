@@ -1,6 +1,9 @@
 # Security Policy
-
+Not spending alot of time here but I would expect this documentation to be reviewed by the departments leads. 
+This is from the template and not much modification here. 
 ## Supported Versions
+
+This is a example from the text 
 
 Use this section to tell people about which versions of your project are
 currently being supported with security updates.
@@ -13,6 +16,8 @@ currently being supported with security updates.
 | < 4.0   | :x:                |
 
 ## Reporting a Vulnerability
+
+Again this is generated from the template 
 
 Use this section to tell people how to report a vulnerability.
 
