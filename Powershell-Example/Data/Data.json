@@ -1,0 +1,89 @@
+{
+"Teams":
+[
+    {
+        "TeamName": "IT",
+        "Properties": {         
+            "members": ["bob","billy","Crystal"],    
+            "Description": "bloody bigger",
+            "Privacy": "closed",
+            "ParentTeamName": "",
+            "Permissions": ["pull"]
+            }
+    },
+    {
+        "TeamName": "TeamReader",
+        "Properties": {     
+            "members": ["bob","billy","Crystal"],    
+            "Description": "Coder Desc docesit change",
+            "Privacy": "secret",
+            "ParentTeamName": "IT",
+            "Permissions": ["pull"]
+            }
+    },
+    {
+        "TeamName": "TeamAdmin",
+        "Properties": {          
+            "members": ["bob","billy","Crystal"],    
+            "Description": "Someone ReadsCode Testing 2",
+            "Privacy": "closed",
+            "ParentTeamName": "IT",
+            "Permissions": ["pull","push","admin","maintain","triage"]
+            }
+    },    
+    {
+        "TeamName": "TeamAdmin", 
+            "Properties": {         
+            "members": ["bob","billy","Crystal"],    
+            "Description": "Someone ReadsCode Testing 2",
+            "Privacy": "closed",
+            "ParentTeamName": "IT",
+            "Permissions": ["admin"]
+            }
+    },
+    {
+        "TeamName": "TeamWrite",
+        "Properties": {         
+            "members": ["bob","billy","Crystal"],    
+            "Description": "Someone ReadsCode Testing 2",
+            "Privacy": "closed",
+            "ParentTeamName": "IT",
+            "Permissions": ["pull"]
+            }
+    },
+    {
+        "TeamName": "TeamMaintain",  
+        "Properties": {         
+            "members": ["praxterz","praxter"],    
+            "Description": "Someone ReadsCode Testing 2",
+            "Privacy": "closed",
+            "ParentTeamName": "IT",
+            "Permissions": ["maintain"]
+        }
+    }
+],
+"Repro":     
+    {
+        "reproName": "WidgetProduct1",
+        "Properties": {
+                    "teamName": "IT",
+                    "Description":"Super Awesome Repro",
+                    "ProtectionPolicy": {
+                        "StatusChecks": "",
+                        "RequireUpToDateBranches": "", 
+                        "EnforceAdmins": "",
+                        "DismissalUsers": "",
+                        "DismissalTeams": "",
+                        "DismissStaleReviews": "",
+                        "RequireCodeOwnerReviews": "$true",
+                        "RequiredApprovingReviewCount": "",
+                        "RestrictPushUsers": "",
+                        "RestrictPushTeams": "",
+                        "RestrictPushApps" : "",
+                        "RequireLinearHistory": "",
+                        "AllowForcePushes": "",
+                        "AllowDeletions": ""
+                    }
+                }
+    }
+}
