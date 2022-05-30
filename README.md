@@ -1,6 +1,5 @@
 #GITHub Exercise ReadMe
 
-[[_TOC_]]
 
 ## Summary:
 This is an exercise simulating a customer experience.
