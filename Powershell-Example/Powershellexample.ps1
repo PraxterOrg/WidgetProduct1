@@ -75,6 +75,17 @@ Function Get-GitHubTeamID {
     Catch {Write-host "error "}
 }
 
+Function Set-GitHubRepositoryToTemplate {
+    [CmdletBinding()] param (
+        [Parameter()] [string] $teamName
+    )
+    Try {
+
+        }
+    Catch {Write-host "error "}
+}
+
+
 Function Set-GitHubTeamPerms {
     [CmdletBinding()] param (
         [Parameter()] [string] $teamName,
@@ -122,7 +133,6 @@ Write-Host "************************ Completed Work Making Objects *************
 $ArgProtectionPolicys = @{cat = "sda"}
 
 #$ProtectionPolicy = ($Branch |new-GitHubRepositoryBranchPatternProtectionRule @ArgProtectionPolicys)
-
 ## two example of of URI that levergage the API
 
 $URIOrg ="https://api.github.com/orgs/PraxterOrg)"
@@ -131,7 +141,7 @@ $URIRepo = "https://api.github.com/repos/PraxterOrg/WidgetProduct1/branches"
 #$Request = (Invoke-webrequest -H  @{'Accept'= 'application/vnd.github.v3+json'} -uri $URIRepo)
 #$Request.Content |Write-Output |ConvertFrom-Json
 
-#$ProtectionPolicy = (Get-GitHubRepositoryBranchProtectionRule -OwnerName $myOrg -BranchName main -RepositoryName WidgetProduct1)
+$ProtectionPolicy = (Get-GitHubRepositoryBranchProtectionRule -OwnerName $myOrg -BranchName main -RepositoryName WidgetProduct1)
 #$Branch |Remove-GitHubRepositoryBranchProtectionRule
 #$branch |New-GitHubRepositoryBranchProtectionRule 
 
